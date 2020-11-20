@@ -1,50 +1,74 @@
 package com.example.a1stproject
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.a1stproject.Detail.DetailsActivity
+import com.example.a1stproject.forecast.ForecastView
+import com.example.a1stproject.region.ChooseRegion
 
-class Location : AppCompatActivity() {
-    lateinit var textView: TextView
-    lateinit var button: Button
-    lateinit var editText: EditText
+class MainActivity : AppCompatActivity(), INavigation {
+
     private lateinit var savingSettingsManager: SettingsManager
-    private val repository = WeatherCastRespository()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         savingSettingsManager = SettingsManager(this)
-        textView = findViewById(R.id.textView)
-        button = findViewById(R.id.button)
-        editText = findViewById(R.id.editTextTextPersonName)
 
+        this.setTitle("Weather Report")
 
-        button.setOnClickListener {
-            repository.loadForecastData("replace with real")
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.frameContainer, ChooseRegion())
+            .commit()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val _menuInflater = menuInflater
+        _menuInflater.inflate(R.menu.forecast_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId){
+            R.id.changeUnitItem -> {
+                showTempSettingDialog()
+                true
+            }
+            else -> false
         }
-        val recycleView = findViewById<RecyclerView>(R.id.recyclerView)
-        recycleView.layoutManager = LinearLayoutManager(this)
-        val forecastAdapter = WeatherCastAdapter(savingSettingsManager.getPreference()){
-            val forecastIntent = Intent(this, DetailsActivity::class.java)
-            forecastIntent.putExtra(DetailsActivity.TEMP_KEY, it.tempature)
-            forecastIntent.putExtra(DetailsActivity.DESRIP_INFO, it.description)
 
-            startActivity(forecastIntent)
+
+    }
+    private fun showTempSettingDialog(){
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setTitle("Unit Settings")
+        dialogBuilder.setMessage("Choose which unit you prefer for your forecast")
+        dialogBuilder.setPositiveButton("C°"){ _, _ ->
+            savingSettingsManager.setPreference(TempUnit.Calcium)
+
         }
-        recycleView.adapter = forecastAdapter
+        dialogBuilder.setNeutralButton("F°"){ _, _ ->
+            savingSettingsManager.setPreference(TempUnit.Fahrenheit)
 
-
-        val weathercastObserver = Observer<List<WeatherCast>>{
-            forecastAdapter.submitList(it)
         }
-        repository.weatherForecast.observe(this, weathercastObserver)
+        dialogBuilder.show()
+    }
 
+    override fun NavigateToDetail(zipcode: String) {
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.frameContainer, ForecastView.createInstance(zipcode))
+            .commit()
+    }
+
+    override fun NavigateToSelect() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.frameContainer, ChooseRegion())
+            .commit()
     }
 }

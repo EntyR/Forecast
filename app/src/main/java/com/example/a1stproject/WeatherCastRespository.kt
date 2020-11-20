@@ -8,7 +8,7 @@ class WeatherCastRespository {
     val weatherForecast = _weeklyForecast
 
     fun loadForecastData(zipcode: String) {
-        val value = List(7) {
+        val value = List(11) {
             Random.nextFloat().rem(100f) * 100
 
         }
