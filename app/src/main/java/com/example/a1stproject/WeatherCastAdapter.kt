@@ -41,7 +41,7 @@ class WeatherCastAdapter(
         return super.getItemViewType(position)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.forecat_item, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.forecast_item, parent, false)
         return ViewHolder(itemView)
     }
 
