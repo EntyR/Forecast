@@ -5,8 +5,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.a1stproject.forecast.ForecastView
-import com.example.a1stproject.region.ChooseRegion
 
 class MainActivity : AppCompatActivity(), INavigation {
 
@@ -19,10 +17,10 @@ class MainActivity : AppCompatActivity(), INavigation {
 
         this.setTitle("Weather Report")
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.frameContainer, ChooseRegion())
-            .commit()
+//        supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.frameContainer, ChooseRegion())
+//            .commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -59,16 +57,16 @@ class MainActivity : AppCompatActivity(), INavigation {
 
     override fun NavigateToDetail(zipcode: String) {
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.frameContainer, ForecastView.createInstance(zipcode))
-            .commit()
+//        supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.frameContainer, ForecastView.createInstance(zipcode))
+//            .commit()
     }
 
     override fun NavigateToSelect() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.frameContainer, ChooseRegion())
-            .commit()
+//        supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.frameContainer, ChooseRegion())
+//            .commit()
     }
 }

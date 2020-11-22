@@ -42,7 +42,7 @@ class ForecastView : Fragment() {
         }
         savingSettingsManager = SettingsManager(requireContext())
 
-        val zipcode = arguments!!.getString(ZIP_KEY) ?: "11111"
+        val zipcode = "11111"//arguments!!.getString(ZIP_KEY) ?: "11111"
 
 
 
@@ -61,7 +61,7 @@ class ForecastView : Fragment() {
         val weathercastObserver = Observer<List<WeatherCast>>{
             forecastAdapter.submitList(it)
         }
-        repository.weatherForecast.observe(this, weathercastObserver)
+        repository.weatherForecast.observe(viewLifecycleOwner, weathercastObserver)
 
         repository.loadForecastData(zipcode)
 
