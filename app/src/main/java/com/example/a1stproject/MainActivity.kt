@@ -5,28 +5,34 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity(), INavigation {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var savingSettingsManager: SettingsManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         savingSettingsManager = SettingsManager(this)
 
-        this.setTitle("Weather Report")
+        val navController = findNavController(R.id.nav_host_fragment)
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
 
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.frameContainer, ChooseRegion())
-//            .commit()
+        findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar).setupWithNavController(navController, appBarConfiguration)
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).setupWithNavController(navController)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val _menuInflater = menuInflater
         _menuInflater.inflate(R.menu.forecast_menu, menu)
         return true
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -55,18 +61,5 @@ class MainActivity : AppCompatActivity(), INavigation {
         dialogBuilder.show()
     }
 
-    override fun NavigateToDetail(zipcode: String) {
 
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.frameContainer, ForecastView.createInstance(zipcode))
-//            .commit()
-    }
-
-    override fun NavigateToSelect() {
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.frameContainer, ChooseRegion())
-//            .commit()
-    }
 }

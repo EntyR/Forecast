@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/forecastView"
+        android:icon="@drawable/ic_baseline_location_on_24"
+        android:title="Today"/>
+    <item
+        android:id="@+id/forecastViewWeekly"
+        android:icon="@drawable/ic_baseline_calendar_today_24"
+        android:title="Weekly"/>
+</menu>

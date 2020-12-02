@@ -3,32 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
-    app:startDestination="@id/chooseRegion">
+    app:startDestination="@id/forecastView">
 
     <fragment
         android:id="@+id/chooseRegion"
         android:name="com.example.a1stproject.region.ChooseRegion"
-        android:label="fragment_choose_region"
-        tools:layout="@layout/fragment_choose_region" >
-        <action
-            android:id="@+id/action_chooseRegion_to_forecastView"
-            app:destination="@id/forecastView" />
-    </fragment>
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_choose_region" />
     <fragment
         android:id="@+id/forecastView"
         android:name="com.example.a1stproject.forecast.ForecastView"
-        android:label="fragment_forecast_view"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_forecast_view" >
         <action
             android:id="@+id/action_forecastView_to_chooseRegion"
             app:destination="@id/chooseRegion" />
         <action
-            android:id="@+id/action_forecastView_to_detailsActivity"
-            app:destination="@id/detailsActivity" />
+            android:id="@+id/action_forecastView_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
     </fragment>
-    <activity
-        android:id="@+id/detailsActivity"
-        android:name="com.example.a1stproject.Detail.DetailsActivity"
-        android:label="activity_details"
-        tools:layout="@layout/activity_details" />
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.example.a1stproject.Detail.DetailsFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/details_fragment" >
+        <argument
+            android:name="temp"
+            app:argType="float" />
+        <argument
+            android:name="deck"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/forecastViewWeekly"
+        android:name="com.example.a1stproject.forecast.ForecastViewWeekly"
+        android:label="ForecastViewWeekly"
+        tools:layout="@layout/fragment_forecast_view_weekly">
+        <action
+            android:id="@+id/action_forecastViewWeekly_to_chooseRegion"
+            app:destination="@id/chooseRegion" />
+        <action
+            android:id="@+id/action_forecastViewWeekly_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
 </navigation>

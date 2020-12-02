@@ -1,17 +1,16 @@
 package com.example.a1stproject.forecast
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.navigation.fragment.findNavController
 import com.example.a1stproject.*
-import com.example.a1stproject.Detail.DetailsActivity
+import com.example.a1stproject.api.DailyForecastModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -19,51 +18,49 @@ class ForecastView : Fragment() {
 
     private lateinit var savingSettingsManager: SettingsManager
     private val repository = WeatherCastRespository()
-    lateinit var mainActivity: INavigation
+    lateinit var tempeture: TextView
+
     lateinit var locationButton: FloatingActionButton
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mainActivity = context as INavigation
-    }
+    lateinit var location: TextView
+    lateinit var locationRepository: LocationRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-
-
-
-
         val view = inflater.inflate(R.layout.fragment_forecast_view, container, false)
 
+        tempeture = view.findViewById(R.id.tempeture)
+        location = view.findViewById(R.id.location)
+        locationRepository = LocationRepository(requireContext())
         locationButton = view.findViewById(R.id.floatingActionButton)
         locationButton.setOnClickListener {
-            mainActivity.NavigateToSelect()
+            val action = ForecastViewDirections.actionForecastViewToChooseRegion()
+            findNavController().navigate(action)
+        }
+
+        val locationObserver = Observer<Location> {
+            Log.e("ForecastView", "Location observer")
+            val zipcode = it as Location.LocationData
+            repository.loadCurrentForecast(zipcode.zipcode)
         }
         savingSettingsManager = SettingsManager(requireContext())
 
-        val zipcode = "11111"//arguments!!.getString(ZIP_KEY) ?: "11111"
 
 
 
-        val recycleView = view.findViewById<RecyclerView>(R.id.recyclerView)
-        recycleView.layoutManager = LinearLayoutManager(requireContext())
-        val forecastAdapter = WeatherCastAdapter(savingSettingsManager.getPreference()){
-            val forecastIntent = Intent(requireContext(), DetailsActivity::class.java)
-            forecastIntent.putExtra(DetailsActivity.TEMP_KEY, it.tempature)
-            forecastIntent.putExtra(DetailsActivity.DESRIP_INFO, it.description)
 
-            startActivity(forecastIntent)
+
+
+        val currentWeatherObserver = Observer<DailyForecastModel>{
+            Log.e("ForecastView", "Forecast observer")
+            location.text = it.name
+            tempeture.text = changeToDegreeString(it.foreCast.temp, TempUnit.Fahrenheit)
         }
-        recycleView.adapter = forecastAdapter
+        repository.currentForecast.observe(viewLifecycleOwner, currentWeatherObserver)
 
 
-        val weathercastObserver = Observer<List<WeatherCast>>{
-            forecastAdapter.submitList(it)
-        }
-        repository.weatherForecast.observe(viewLifecycleOwner, weathercastObserver)
-
-        repository.loadForecastData(zipcode)
+        locationRepository.savedLocation.observe(viewLifecycleOwner, locationObserver)
 
 
         return  view
